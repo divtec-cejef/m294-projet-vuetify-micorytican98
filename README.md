@@ -1,10 +1,10 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/EBdR9AYf)
-# 🌐 Mon Projet Vue.js & Vuetify
+# 🌐 Game Library - Projet Vue.js & Vuetify
 
 ## 1. 🎨 Présentation du projet
 
 ### Concept
-- API choisie et pourquoi  
+- API choisie (RAWG - api pour les jeux vidéo et )
 - Public cible  
 - Objectifs de l’application  
 
@@ -43,7 +43,7 @@ _(Capture d’écran de l’application)_
 ## 3. 🛠️ Outils et méthodologie
 
 ### Environnement de développement
-- **IDE** : VS Code / WebStorm / Autre
+- **IDE** : VS Code 
 - **Versioning** : Git + GitHub
 - **Dépendances principales** : Vue 3, Vuetify 3, Pinia, Axios/Fetch
 - **Gestion API Keys** : `.env` + `.env.example`
@@ -113,17 +113,17 @@ Outils utiles : Figma / Draw.io / ...
 **⚠️ TRANSPARENCE OBLIGATOIRE** : Si vous utilisez une IA, vous DEVEZ :
 
 ### IA utilisée
-- **Nom** : ChatGPT / Claude / GitHub Copilot / Autre  
-- **Version** : _(ex. GPT-4)_  
-- **Contexte** : Aide ponctuelle / Génération de code / Debugging  
+- **Nom** : Claude 
+- **Version** : Sonnet 4.5  
+- **Contexte** : Aide ponctuelle / Génération de code / 
 
 ### Utilisation détaillée
 **Domaines d'aide :**
 - Aide au code général : X%
 - Génération de snippets Vue/Vuetify : X%  
 - Aide à la structuration du projet : X%
-- Debugging : X%  
-- Recherche d’idées : X%  
+- Debugging : 0%  
+- Recherche d’idées : 0%  
 
 **Compréhension et adaptation**
 - Expliquer ce que fait le code généré  

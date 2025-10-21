@@ -98,16 +98,22 @@
           </v-card-text>
 
           <v-card-actions>
-          <v-btn 
-            color="primary" 
-            variant="text"
-            :to="`/game-${game.id}`"
-          >
-            Détails
-          </v-btn>
+            <v-btn 
+              color="primary" 
+              variant="text"
+              :to="`/game-${game.id}`"
+            >
+              Détails
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn icon="mdi-heart-outline" variant="text"></v-btn>
+            <v-btn 
+              :icon="favoritesStore.isFavorite(game.id) ? 'mdi-heart' : 'mdi-heart-outline'"
+              :color="favoritesStore.isFavorite(game.id) ? 'red' : 'grey'"
+              variant="text"
+              @click="favoritesStore.toggleFavorite(game.id)"
+            ></v-btn>
           </v-card-actions>
+
         </v-card>
       </v-col>
     </v-row>
@@ -117,6 +123,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getGames, searchGames, getGenres } from '@/services/api.js';
+import { useFavoritesStore } from '@/stores/favorites.js';
 
 // Variables réactives
 const games = ref([]);
@@ -126,6 +133,8 @@ const searchQuery = ref('');
 const selectedGenre = ref('');
 const selectedSort = ref('-rating');
 const genres = ref([]);
+// Store des favoris
+const favoritesStore = useFavoritesStore();
 
 // Options de tri
 const sortOptions = [
@@ -137,6 +146,7 @@ const sortOptions = [
 
 // Charger les jeux et genres au montage
 onMounted(async () => {
+  favoritesStore.loadFavorites(); // Charger les favoris sauvegardés
   await loadGenres();
   await loadGames();
 });
