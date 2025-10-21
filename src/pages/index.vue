@@ -6,6 +6,34 @@
 <v-card class="mb-6">
   <v-card-text>
     <v-row>
+      <!-- Filtre par années -->
+      <v-col cols="12">
+        <div class="px-4">
+          <div class="d-flex justify-space-between align-center mb-2">
+            <span class="text-subtitle-2">
+              <v-icon icon="mdi-calendar-range" size="small" class="mr-1"></v-icon>
+              Période: {{ yearRange[0] }} - {{ yearRange[1] }}
+            </span>
+            <v-btn
+              size="small"
+              variant="text"
+              color="primary"
+              @click="applyYearFilter"
+            >
+              Appliquer
+            </v-btn>
+          </div>
+          <v-range-slider
+            v-model="yearRange"
+            :min="1980"
+            :max="currentYear"
+            :step="1"
+            thumb-label
+            color="primary"
+          ></v-range-slider>
+        </div>
+      </v-col>
+
       <!-- Recherche -->
       <v-col cols="12" md="6">
         <v-text-field
@@ -157,6 +185,8 @@ const selectedSort = ref('-metacritic');
 const genres = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
+const yearRange = ref([2010, 2025]);
+const currentYear = new Date().getFullYear();
 // Store des favoris
 const favoritesStore = useFavoritesStore();
 
@@ -171,7 +201,8 @@ const sortOptions = [
 
 // Charger les jeux et genres au montage
 onMounted(async () => {
-  favoritesStore.loadFavorites(); // Charger les favoris sauvegardés
+  favoritesStore.loadFavorites();
+  loadYearRange(); // Charger la plage d'années sauvegardée
   await loadGenres();
   await loadGames();
 });
@@ -191,10 +222,13 @@ async function loadGames(page = 1) {
   try {
     loading.value = true;
     error.value = null;
-    const data = await getGames(page, 20, selectedSort.value, selectedGenre.value);
+    
+    // Créer la plage de dates au format YYYY-MM-DD,YYYY-MM-DD
+    const dateRange = `${yearRange.value[0]}-01-01,${yearRange.value[1]}-12-31`;
+    
+    const data = await getGames(page, 20, selectedSort.value, selectedGenre.value, dateRange);
     games.value = data.results;
     currentPage.value = page;
-    // Calculer le nombre total de pages (max 500 résultats = 25 pages)
     totalPages.value = Math.min(Math.ceil(data.count / 20), 25);
   } catch (err) {
     error.value = 'Impossible de charger les jeux. Vérifiez votre connexion.';
@@ -245,6 +279,26 @@ function changePage(page) {
   loadGames(page);
   // Scroll vers le haut de la page
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Sauvegarder la plage d'années
+function saveYearRange() {
+  localStorage.setItem('yearRange', JSON.stringify(yearRange.value));
+}
+
+// Charger la plage d'années sauvegardée
+function loadYearRange() {
+  const saved = localStorage.getItem('yearRange');
+  if (saved) {
+    yearRange.value = JSON.parse(saved);
+  }
+}
+
+// Appliquer le filtre d'années
+function applyYearFilter() {
+  saveYearRange();
+  currentPage.value = 1;
+  loadGames(1);
 }
 
 // Obtenir la couleur selon le score Metacritic

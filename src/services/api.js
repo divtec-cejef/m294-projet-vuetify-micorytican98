@@ -8,14 +8,19 @@ const BASE_URL = 'https://api.rawg.io/api';
  * @param {number} pageSize - Nombre de jeux par page
  * @param {string} ordering - Tri (-rating, -released, name, etc.)
  * @param {string} genres - IDs des genres séparés par virgule
+ * @param {string} dates - Plage de dates (YYYY-MM-DD,YYYY-MM-DD)
  * @returns {Promise} - Liste des jeux
  */
-export async function getGames(page = 1, pageSize = 20, ordering = '-rating', genres = '') {
+export async function getGames(page = 1, pageSize = 20, ordering = '-metacritic', genres = '', dates = '') {
   try {
     let url = `${BASE_URL}/games?key=${API_KEY}&page=${page}&page_size=${pageSize}&ordering=${ordering}`;
     
     if (genres) {
       url += `&genres=${genres}`;
+    }
+    
+    if (dates) {
+      url += `&dates=${dates}`;
     }
     
     const response = await fetch(url);
