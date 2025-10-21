@@ -88,12 +88,25 @@
           <v-card-title>{{ game.name }}</v-card-title>
 
           <v-card-text>
-            <div class="d-flex align-center mb-2">
-              <v-icon icon="mdi-star" color="yellow" size="small"></v-icon>
-              <span class="ml-1">{{ game.rating }}</span>
+            <!-- Score Metacritic -->
+            <div v-if="game.metacritic" class="d-flex align-center mb-2">
+              <v-chip
+                :color="getMetacriticColor(game.metacritic)"
+                size="small"
+                class="font-weight-bold"
+              >
+                {{ game.metacritic }}
+              </v-chip>
+              <span class="ml-2 text-caption text-grey">Metacritic</span>
             </div>
+            <div v-else class="mb-2 text-caption text-grey">
+              Score non disponible
+            </div>
+
+            <!-- Date de sortie -->
             <div class="text-caption">
-              Sortie: {{ game.released }}
+              <v-icon icon="mdi-calendar" size="x-small"></v-icon>
+              {{ game.released }}
             </div>
           </v-card-text>
 
@@ -131,15 +144,16 @@ const loading = ref(true);
 const error = ref(null);
 const searchQuery = ref('');
 const selectedGenre = ref('');
-const selectedSort = ref('-rating');
+const selectedSort = ref('-metacritic');
 const genres = ref([]);
 // Store des favoris
 const favoritesStore = useFavoritesStore();
 
 // Options de tri
 const sortOptions = [
-  { title: 'Meilleure note', value: '-rating' },
+  { title: 'Metacritic (Meilleur)', value: '-metacritic' },
   { title: 'Plus récent', value: '-released' },
+  { title: 'Popularité', value: '-rating' },
   { title: 'Nom (A-Z)', value: 'name' },
   { title: 'Nom (Z-A)', value: '-name' },
 ];
@@ -208,5 +222,12 @@ async function handleSearch() {
 async function clearSearch() {
   searchQuery.value = '';
   await loadGames();
+}
+
+// Obtenir la couleur selon le score Metacritic
+function getMetacriticColor(score) {
+  if (score >= 75) return 'success'; // Vert pour bon score
+  if (score >= 50) return 'warning'; // Orange pour score moyen
+  return 'error'; // Rouge pour mauvais score
 }
 </script>

@@ -57,12 +57,21 @@
           <v-card>
             <v-card-title>Informations</v-card-title>
             <v-card-text>
-              <!-- Note -->
+              <!-- Score Metacritic -->
               <div class="mb-3">
-                <div class="text-subtitle-2 mb-1">Note</div>
-                <div class="d-flex align-center">
-                  <v-icon icon="mdi-star" color="yellow"></v-icon>
-                  <span class="ml-2 text-h6">{{ game.rating }} / 5</span>
+                <div class="text-subtitle-2 mb-1">Score Metacritic</div>
+                <div v-if="game.metacritic" class="d-flex align-center">
+                  <v-chip
+                    :color="getMetacriticColor(game.metacritic)"
+                    size="large"
+                    class="font-weight-bold text-h6"
+                  >
+                    {{ game.metacritic }}
+                  </v-chip>
+                  <span class="ml-2 text-body-2 text-grey">/ 100</span>
+                </div>
+                <div v-else class="text-body-2 text-grey">
+                  Score non disponible
                 </div>
               </div>
 
@@ -158,6 +167,13 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+// Obtenir la couleur selon le score Metacritic
+function getMetacriticColor(score) {
+  if (score >= 75) return 'success';
+  if (score >= 50) return 'warning';
+  return 'error';
+}
 </script>
 
 <style scoped>

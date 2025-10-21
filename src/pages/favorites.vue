@@ -48,12 +48,25 @@
           <v-card-title>{{ game.name }}</v-card-title>
 
           <v-card-text>
-            <div class="d-flex align-center mb-2">
-              <v-icon icon="mdi-star" color="yellow" size="small"></v-icon>
-              <span class="ml-1">{{ game.rating }}</span>
+            <!-- Score Metacritic -->
+            <div v-if="game.metacritic" class="d-flex align-center mb-2">
+              <v-chip
+                :color="getMetacriticColor(game.metacritic)"
+                size="small"
+                class="font-weight-bold"
+              >
+                {{ game.metacritic }}
+              </v-chip>
+              <span class="ml-2 text-caption text-grey">Metacritic</span>
             </div>
+            <div v-else class="mb-2 text-caption text-grey">
+              Score non disponible
+            </div>
+
+            <!-- Date de sortie -->
             <div class="text-caption">
-              Sortie: {{ game.released }}
+              <v-icon icon="mdi-calendar" size="x-small"></v-icon>
+              {{ game.released }}
             </div>
           </v-card-text>
 
@@ -125,5 +138,12 @@ async function removeFavorite(gameId) {
   favoritesStore.removeFavorite(gameId);
   // Recharger la liste
   await loadFavoriteGames();
+}
+
+// Obtenir la couleur selon le score Metacritic
+function getMetacriticColor(score) {
+  if (score >= 75) return 'success';
+  if (score >= 50) return 'warning';
+  return 'error';
 }
 </script>
