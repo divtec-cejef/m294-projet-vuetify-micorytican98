@@ -105,3 +105,49 @@ export async function getGenres() {
     throw error;
   }
 }
+
+/**
+ * Récupère les captures d'écran d'un jeu
+ * @param {number} id - ID du jeu
+ * @returns {Promise} - Liste des captures d'écran
+ */
+export async function getGameScreenshots(id) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/games/${id}/screenshots?key=${API_KEY}`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Erreur lors du chargement des captures');
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erreur API:', error);
+    throw error;
+  }
+}
+
+/**
+ * Récupère les vidéos d'un jeu
+ * @param {number} id - ID du jeu
+ * @returns {Promise} - Liste des vidéos
+ */
+export async function getGameVideos(id) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/games/${id}/movies?key=${API_KEY}`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Erreur lors du chargement des vidéos');
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erreur API:', error);
+    throw error;
+  }
+}

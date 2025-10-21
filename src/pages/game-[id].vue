@@ -50,6 +50,56 @@
               <div v-html="game.description"></div>
             </v-card-text>
           </v-card>
+          <!-- Captures d'écran -->
+          <v-card v-if="screenshots.length > 0" class="mb-4">
+            <v-card-title>
+              <v-icon icon="mdi-image-multiple" class="mr-2"></v-icon>
+              Captures d'écran
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col
+                  v-for="screenshot in screenshots.slice(0, 6)"
+                  :key="screenshot.id"
+                  cols="6"
+                  sm="4"
+                >
+                  <v-img
+                    :src="screenshot.image"
+                    aspect-ratio="16/9"
+                    cover
+                    class="cursor-pointer rounded"
+                    @click="openMedia(screenshot)"
+                  ></v-img>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+
+          <!-- Vidéos -->
+          <v-card v-if="videos.length > 0" class="mb-4">
+            <v-card-title>
+              <v-icon icon="mdi-play-circle" class="mr-2"></v-icon>
+              Vidéos
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col
+                  v-for="video in videos"
+                  :key="video.id"
+                  cols="12"
+                  sm="6"
+                >
+                  <video
+                    :src="video.data.max"
+                    controls
+                    class="w-100 rounded"
+                    style="max-height: 300px;"
+                  ></video>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
         </v-col>
 
         <v-col cols="12" md="4">
@@ -125,13 +175,29 @@
         </v-col>
       </v-row>
     </div>
+    <!-- Dialogue pour afficher l'image en grand -->
+    <v-dialog v-model="showMediaDialog" max-width="1200">
+      <v-card>
+        <v-img
+          v-if="selectedMedia"
+          :src="selectedMedia.image"
+          max-height="80vh"
+        ></v-img>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="showMediaDialog = false">
+            Fermer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getGameDetails } from '@/services/api.js';
+import { getGameDetails, getGameScreenshots, getGameVideos } from '@/services/api.js';
 import { useFavoritesStore } from '@/stores/favorites.js';
 
 const route = useRoute();
@@ -140,28 +206,41 @@ const route = useRoute();
 const game = ref(null);
 const loading = ref(true);
 const error = ref(null);
+const screenshots = ref([]);
+const videos = ref([]);
+const selectedMedia = ref(null);
+const showMediaDialog = ref(false);
 // Store des favoris
 const favoritesStore = useFavoritesStore();
 
 // Charger les détails du jeu au montage
 onMounted(async () => {
-  favoritesStore.loadFavorites(); // Charger les favoris
+  favoritesStore.loadFavorites();
   try {
     loading.value = true;
     const gameId = route.params.id;
     
-    console.log('ID du jeu:', gameId); // Pour déboguer
+    console.log('ID du jeu:', gameId);
     
     if (!gameId) {
       error.value = 'ID du jeu manquant';
       return;
     }
     
-    const data = await getGameDetails(gameId);
-    console.log('Données du jeu:', data); // Pour déboguer
-    game.value = data;
+    // Charger les détails, captures et vidéos en parallèle
+    const [gameData, screenshotsData, videosData] = await Promise.all([
+      getGameDetails(gameId),
+      getGameScreenshots(gameId),
+      getGameVideos(gameId)
+    ]);
+    
+    console.log('Données du jeu:', gameData);
+    game.value = gameData;
+    screenshots.value = screenshotsData.results || [];
+    videos.value = videosData.results || [];
+    
   } catch (err) {
-    console.error('Erreur:', err); // Pour déboguer
+    console.error('Erreur:', err);
     error.value = 'Impossible de charger les détails du jeu';
   } finally {
     loading.value = false;
@@ -174,10 +253,25 @@ function getMetacriticColor(score) {
   if (score >= 50) return 'warning';
   return 'error';
 }
+
+// Ouvrir le dialogue média
+function openMedia(media) {
+  selectedMedia.value = media;
+  showMediaDialog.value = true;
+}
 </script>
 
 <style scoped>
 .bg-gradient {
   background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.cursor-pointer:hover {
+  transform: scale(1.05);
 }
 </style>
