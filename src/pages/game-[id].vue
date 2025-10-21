@@ -103,12 +103,14 @@
               <!-- Bouton favoris -->
               <v-btn
                 block
-                color="primary"
-                prepend-icon="mdi-heart"
+                :color="favoritesStore.isFavorite(game.id) ? 'red' : 'primary'"
+                :prepend-icon="favoritesStore.isFavorite(game.id) ? 'mdi-heart' : 'mdi-heart-outline'"
                 class="mt-4"
+                @click="favoritesStore.toggleFavorite(game.id)"
               >
-                Ajouter aux favoris
+                {{ favoritesStore.isFavorite(game.id) ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
               </v-btn>
+
             </v-card-text>
           </v-card>
         </v-col>
@@ -121,6 +123,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getGameDetails } from '@/services/api.js';
+import { useFavoritesStore } from '@/stores/favorites.js';
 
 const route = useRoute();
 
@@ -128,9 +131,12 @@ const route = useRoute();
 const game = ref(null);
 const loading = ref(true);
 const error = ref(null);
+// Store des favoris
+const favoritesStore = useFavoritesStore();
 
 // Charger les détails du jeu au montage
 onMounted(async () => {
+  favoritesStore.loadFavorites(); // Charger les favoris
   try {
     loading.value = true;
     const gameId = route.params.id;
