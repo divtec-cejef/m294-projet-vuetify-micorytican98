@@ -130,6 +130,15 @@
         </v-card>
       </v-col>
     </v-row>
+    <!-- Pagination -->
+    <div v-if="!loading && games.length > 0" class="mt-6 d-flex justify-center">
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="7"
+        @update:model-value="changePage"
+  ></v-pagination>
+</div>
   </v-container>
 </template>
 
@@ -146,6 +155,8 @@ const searchQuery = ref('');
 const selectedGenre = ref('');
 const selectedSort = ref('-metacritic');
 const genres = ref([]);
+const currentPage = ref(1);
+const totalPages = ref(1);
 // Store des favoris
 const favoritesStore = useFavoritesStore();
 
@@ -176,12 +187,15 @@ async function loadGenres() {
 }
 
 // Fonction pour charger les jeux
-async function loadGames() {
+async function loadGames(page = 1) {
   try {
     loading.value = true;
     error.value = null;
-    const data = await getGames(1, 20, selectedSort.value, selectedGenre.value);
+    const data = await getGames(page, 20, selectedSort.value, selectedGenre.value);
     games.value = data.results;
+    currentPage.value = page;
+    // Calculer le nombre total de pages (max 500 résultats = 25 pages)
+    totalPages.value = Math.min(Math.ceil(data.count / 20), 25);
   } catch (err) {
     error.value = 'Impossible de charger les jeux. Vérifiez votre connexion.';
   } finally {
@@ -192,7 +206,8 @@ async function loadGames() {
 // Appliquer les filtres
 function applyFilters() {
   searchQuery.value = ''; // Réinitialiser la recherche
-  loadGames();
+  currentPage.value = 1; // Retour à la page 1
+  loadGames(1);
 }
 
 // Fonction de recherche
@@ -222,6 +237,14 @@ async function handleSearch() {
 async function clearSearch() {
   searchQuery.value = '';
   await loadGames();
+}
+
+// Changer de page
+function changePage(page) {
+  currentPage.value = page;
+  loadGames(page);
+  // Scroll vers le haut de la page
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Obtenir la couleur selon le score Metacritic
