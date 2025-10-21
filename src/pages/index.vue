@@ -48,9 +48,13 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn color="primary" variant="text">
-              Détails
-            </v-btn>
+          <v-btn 
+            color="primary" 
+            variant="text"
+            :to="`/game-${game.id}`"
+          >
+            Détails
+          </v-btn>
             <v-spacer></v-spacer>
             <v-btn icon="mdi-heart-outline" variant="text"></v-btn>
           </v-card-actions>
