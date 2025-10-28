@@ -47,7 +47,7 @@
           <v-card class="mb-4">
             <v-card-title>Description</v-card-title>
             <v-card-text>
-              <div v-html="game.description"></div>
+              <div class="game-description" v-html="game.description"></div>
             </v-card-text>
           </v-card>
           <!-- Captures d'écran -->
@@ -273,5 +273,25 @@ function openMedia(media) {
 
 .cursor-pointer:hover {
   transform: scale(1.05);
+}
+
+/* Formatage de la description */
+.game-description :deep(p) {
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.game-description :deep(br) {
+  display: block;
+  content: "";
+  margin-top: 8px;
+}
+
+.game-description :deep(h1),
+.game-description :deep(h2),
+.game-description :deep(h3) {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-weight: 600;
 }
 </style>
