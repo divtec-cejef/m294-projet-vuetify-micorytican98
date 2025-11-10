@@ -6,32 +6,39 @@
 <v-card class="mb-6">
   <v-card-text>
     <v-row>
-      <!-- Filtre par années -->
-      <v-col cols="12">
-        <div class="px-4">
-          <div class="d-flex justify-space-between align-center mb-2">
-            <span class="text-subtitle-2">
-              <v-icon icon="mdi-calendar-range" size="small" class="mr-1"></v-icon>
-              Période: {{ yearRange[0] }} - {{ yearRange[1] }}
-            </span>
-            <v-btn
-              size="small"
-              variant="text"
-              color="primary"
-              @click="applyYearFilter"
-            >
-              Appliquer
-            </v-btn>
-          </div>
-          <v-range-slider
-            v-model="yearRange"
-            :min="1980"
-            :max="currentYear"
-            :step="1"
-            thumb-label
-            color="primary"
-          ></v-range-slider>
-        </div>
+<!-- Filtre par années -->
+      <v-col cols="12" md="6">
+        <v-row>
+          <v-col cols="5">
+            <v-text-field
+              v-model.number="yearRange[0]"
+              label="Année de début"
+              type="number"
+              :min="1980"
+              :max="yearRange[1]"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-calendar-start"
+              @blur="applyYearFilter"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-icon icon="mdi-arrow-right" color="grey"></v-icon>
+          </v-col>
+          <v-col cols="5">
+            <v-text-field
+              v-model.number="yearRange[1]"
+              label="Année de fin"
+              type="number"
+              :min="yearRange[0]"
+              :max="currentYear"
+              variant="outlined"
+              density="comfortable"
+              prepend-inner-icon="mdi-calendar-end"
+              @blur="applyYearFilter"
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </v-col>
 
       <!-- Recherche -->
