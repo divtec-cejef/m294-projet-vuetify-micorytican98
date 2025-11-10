@@ -27,15 +27,31 @@
         Retour
       </v-btn>
 
-      <!-- En-tête avec image -->
-      <v-card class="mb-4">
+      <!-- En-tête avec image hero -->
+      <v-card class="mb-6 hero-card" elevation="0">
         <v-img
           :src="game.background_image"
-          height="400"
+          height="500"
           cover
+          gradient="to bottom, rgba(15,23,42,.3), rgba(15,23,42,.95)"
         >
-          <div class="d-flex flex-column justify-end h-100 pa-4 bg-gradient">
-            <h1 class="text-h3 text-white">{{ game.name }}</h1>
+          <div class="d-flex flex-column justify-end h-100 pa-8">
+            <h1 class="game-title mb-2">{{ game.name }}</h1>
+            <div class="d-flex align-center gap-4">
+              <v-chip
+                v-if="game.metacritic"
+                :color="getMetacriticColor(game.metacritic)"
+                size="large"
+                class="font-weight-bold"
+              >
+                <v-icon icon="mdi-trophy" start></v-icon>
+                {{ game.metacritic }}
+              </v-chip>
+              <v-chip size="large" variant="outlined" color="white">
+                <v-icon icon="mdi-calendar" start></v-icon>
+                {{ game.released }}
+              </v-chip>
+            </div>
           </div>
         </v-img>
       </v-card>
@@ -43,17 +59,22 @@
       <!-- Informations principales -->
       <v-row>
         <v-col cols="12" md="8">
+
           <!-- Description -->
-          <v-card class="mb-4">
-            <v-card-title>Description</v-card-title>
+          <v-card class="mb-4 content-card" elevation="8">
+            <v-card-title class="text-h5 pb-4">
+              <v-icon icon="mdi-text-box" class="mr-2" color="primary"></v-icon>
+              Description
+            </v-card-title>
             <v-card-text>
               <div class="game-description" v-html="game.description"></div>
             </v-card-text>
           </v-card>
+
           <!-- Captures d'écran -->
-          <v-card v-if="screenshots.length > 0" class="mb-4">
-            <v-card-title>
-              <v-icon icon="mdi-image-multiple" class="mr-2"></v-icon>
+          <v-card v-if="screenshots.length > 0" class="mb-4 content-card" elevation="8">
+            <v-card-title class="text-h5 pb-4">
+              <v-icon icon="mdi-image-multiple" class="mr-2" color="secondary"></v-icon>
               Captures d'écran
             </v-card-title>
             <v-card-text>
@@ -77,9 +98,9 @@
           </v-card>
 
           <!-- Vidéos -->
-          <v-card v-if="videos.length > 0" class="mb-4">
-            <v-card-title>
-              <v-icon icon="mdi-play-circle" class="mr-2"></v-icon>
+          <v-card v-if="videos.length > 0" class="mb-4 content-card" elevation="8">
+            <v-card-title class="text-h5 pb-4">
+              <v-icon icon="mdi-play-circle" class="mr-2" color="accent"></v-icon>
               Vidéos
             </v-card-title>
             <v-card-text>
@@ -104,13 +125,19 @@
 
         <v-col cols="12" md="4">
           <!-- Informations -->
-          <v-card>
-            <v-card-title>Informations</v-card-title>
+          <v-card class="info-card" elevation="8">
+            <v-card-title class="text-h5 pb-4">
+              <v-icon icon="mdi-information" class="mr-2"></v-icon>
+              Informations
+            </v-card-title>
             <v-card-text>
               <!-- Score Metacritic -->
-              <div class="mb-3">
-                <div class="text-subtitle-2 mb-1">Score Metacritic</div>
-                <div v-if="game.metacritic" class="d-flex align-center">
+              <div class="info-item">
+                <div class="d-flex align-center mb-2">
+                  <v-icon icon="mdi-star-circle" color="warning" class="mr-2"></v-icon>
+                  <span class="text-subtitle-1 font-weight-medium">Score Metacritic</span>
+                </div>
+                <div v-if="game.metacritic" class="ml-8">
                   <v-chip
                     :color="getMetacriticColor(game.metacritic)"
                     size="large"
@@ -120,61 +147,88 @@
                   </v-chip>
                   <span class="ml-2 text-body-2 text-grey">/ 100</span>
                 </div>
-                <div v-else class="text-body-2 text-grey">
+                <div v-else class="ml-8 text-body-2 text-grey">
                   Score non disponible
                 </div>
               </div>
 
+              <v-divider class="my-4"></v-divider>
+
               <!-- Date de sortie -->
-              <div class="mb-3">
-                <div class="text-subtitle-2 mb-1">Date de sortie</div>
-                <div>{{ game.released }}</div>
+              <div class="info-item">
+                <div class="d-flex align-center mb-2">
+                  <v-icon icon="mdi-calendar-check" color="info" class="mr-2"></v-icon>
+                  <span class="text-subtitle-1 font-weight-medium">Date de sortie</span>
+                </div>
+                <div class="ml-8 text-body-1">{{ game.released }}</div>
               </div>
+
+              <v-divider class="my-4"></v-divider>
 
               <!-- Genres -->
-              <div class="mb-3" v-if="game.genres && game.genres.length">
-                <div class="text-subtitle-2 mb-1">Genres</div>
-                <v-chip
-                  v-for="genre in game.genres"
-                  :key="genre.id"
-                  class="mr-1 mb-1"
-                  size="small"
-                >
-                  {{ genre.name }}
-                </v-chip>
+              <div class="info-item" v-if="game.genres && game.genres.length">
+                <div class="d-flex align-center mb-2">
+                  <v-icon icon="mdi-gamepad-variant" color="secondary" class="mr-2"></v-icon>
+                  <span class="text-subtitle-1 font-weight-medium">Genres</span>
+                </div>
+                <div class="ml-8">
+                  <v-chip
+                    v-for="genre in game.genres"
+                    :key="genre.id"
+                    class="mr-2 mb-2"
+                    color="secondary"
+                    variant="flat"
+                  >
+                    {{ genre.name }}
+                  </v-chip>
+                </div>
               </div>
+
+              <v-divider class="my-4"></v-divider>
 
               <!-- Plateformes -->
-              <div class="mb-3" v-if="game.platforms && game.platforms.length">
-                <div class="text-subtitle-2 mb-1">Plateformes</div>
-                <v-chip
-                  v-for="platform in game.platforms"
-                  :key="platform.platform.id"
-                  class="mr-1 mb-1"
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                >
-                  {{ platform.platform.name }}
-                </v-chip>
+              <div class="info-item" v-if="game.platforms && game.platforms.length">
+                <div class="d-flex align-center mb-2">
+                  <v-icon icon="mdi-devices" color="accent" class="mr-2"></v-icon>
+                  <span class="text-subtitle-1 font-weight-medium">Plateformes</span>
+                </div>
+                <div class="ml-8">
+                  <v-chip
+                    v-for="platform in game.platforms"
+                    :key="platform.platform.id"
+                    class="mr-2 mb-2"
+                    color="accent"
+                    variant="outlined"
+                  >
+                    {{ platform.platform.name }}
+                  </v-chip>
+                </div>
               </div>
 
-              <!-- Bouton favoris -->
+              <v-divider class="my-4"></v-divider>
+
+              <!-- Bouton favoris amélioré -->
               <v-btn
                 block
                 :color="favoritesStore.isFavorite(game.id) ? 'red' : 'primary'"
-                :prepend-icon="favoritesStore.isFavorite(game.id) ? 'mdi-heart' : 'mdi-heart-outline'"
-                class="mt-4"
+                size="x-large"
+                elevation="4"
+                class="mt-4 favorite-btn"
                 @click="favoritesStore.toggleFavorite(game.id)"
               >
+                <v-icon 
+                  :icon="favoritesStore.isFavorite(game.id) ? 'mdi-heart' : 'mdi-heart-outline'"
+                  start
+                  size="large"
+                ></v-icon>
                 {{ favoritesStore.isFavorite(game.id) ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
               </v-btn>
-
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
     </div>
+
     <!-- Dialogue pour afficher l'image en grand -->
     <v-dialog v-model="showMediaDialog" max-width="1200">
       <v-card>
@@ -210,6 +264,7 @@ const screenshots = ref([]);
 const videos = ref([]);
 const selectedMedia = ref(null);
 const showMediaDialog = ref(false);
+
 // Store des favoris
 const favoritesStore = useFavoritesStore();
 
@@ -268,17 +323,76 @@ function openMedia(media) {
 
 .cursor-pointer {
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px !important;
+  overflow: hidden;
 }
 
 .cursor-pointer:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: 0 12px 24px rgba(236, 72, 153, 0.4) !important;
+}
+
+/* Hero card */
+.hero-card {
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+/* Titre du jeu avec gradient */
+.game-title {
+  font-size: 3.5rem !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 2px 2px 20px rgba(0,0,0,0.5);
+  line-height: 1.2;
+}
+
+/* Card d'informations */
+.info-card {
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%) !important;
+}
+
+/* Cards de contenu (description, captures, vidéos) */
+.content-card {
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(236, 72, 153, 0.03) 100%) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* Items d'information */
+.info-item {
+  margin-bottom: 8px;
+}
+
+/* Bouton favoris avec animation */
+.favorite-btn {
+  transition: all 0.3s ease;
+  border-radius: 12px !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.5px;
+}
+
+.favorite-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4) !important;
 }
 
 /* Formatage de la description */
 .game-description :deep(p) {
   margin-bottom: 16px;
-  line-height: 1.6;
+  line-height: 1.8;
+  font-size: 1.05rem;
 }
 
 .game-description :deep(br) {
