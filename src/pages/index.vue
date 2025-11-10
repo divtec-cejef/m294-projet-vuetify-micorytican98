@@ -83,6 +83,18 @@
           @update:model-value="applyFilters"
         ></v-select>
       </v-col>
+
+      <!-- Bouton réinitialiser -->
+      <v-col cols="12" class="d-flex justify-end">
+        <v-btn
+          variant="outlined"
+          color="grey"
+          prepend-icon="mdi-refresh"
+          @click="resetFilters"
+        >
+          Réinitialiser les filtres
+        </v-btn>
+      </v-col>
     </v-row>
   </v-card-text>
 </v-card>
@@ -305,6 +317,17 @@ function loadYearRange() {
 function applyYearFilter() {
   saveYearRange();
   currentPage.value = 1;
+  loadGames(1);
+}
+
+// Réinitialiser tous les filtres
+function resetFilters() {
+  searchQuery.value = '';
+  selectedGenre.value = '';
+  selectedSort.value = '-metacritic';
+  yearRange.value = [2010, 2025];
+  currentPage.value = 1;
+  saveYearRange();
   loadGames(1);
 }
 
