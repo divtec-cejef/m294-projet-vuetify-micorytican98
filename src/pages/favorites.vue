@@ -39,12 +39,14 @@
     <!-- Liste des jeux favoris -->
     <v-row v-else>
       <v-col
-        v-for="game in favoriteGames"
+        v-for="(game, index) in favoriteGames"
         :key="game.id"
         cols="12"
         sm="6"
         md="4"
         lg="3"
+        class="fade-in"
+        :style="{ animationDelay: `${index * 0.05}s` }"
       >
         <v-card 
           class="game-card"
@@ -192,5 +194,22 @@ function getMetacriticColor(score) {
 .skeleton-card {
   border-radius: 12px !important;
   overflow: hidden;
+}
+
+/* Animation d'apparition des cartes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
 }
 </style>
