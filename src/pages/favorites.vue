@@ -12,15 +12,24 @@
       Ajoutez des jeux depuis la page d'accueil !
     </v-alert>
 
-    <!-- Stade de chargement -->
-    <div v-if="loading" class="text-center my-10">
-      <v-progress-circular
-        indeterminate
-        color="primary"
-        size="64"
-      ></v-progress-circular>
-      <p class="mt-4">Chargement de vos favoris...</p>
-    </div>
+    <!-- Stade de chargement avec skeleton -->
+    <v-row v-if="loading">
+      <v-col
+        v-for="n in 8"
+        :key="n"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <v-card class="skeleton-card">
+          <v-skeleton-loader
+            type="image, list-item-two-line"
+            :loading="true"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <!-- Stade d'erreur -->
     <v-alert v-else-if="error" type="error" class="my-4">
@@ -37,13 +46,21 @@
         md="4"
         lg="3"
       >
-        <v-card>
+        <v-card 
+          class="game-card"
+          elevation="4"
+          :ripple="false"
+          @click="$router.push(`/game-${game.id}`)"
+        >
           <!-- Image du jeu -->
           <v-img
             :src="game.background_image"
             height="200"
             cover
-          ></v-img>
+            class="game-image"
+          >
+            <div class="image-gradient"></div>
+          </v-img>
 
           <v-card-title>{{ game.name }}</v-card-title>
 
@@ -71,19 +88,12 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn 
-              color="primary" 
-              variant="text"
-              :to="`/game-${game.id}`"
-            >
-              Détails
-            </v-btn>
             <v-spacer></v-spacer>
             <v-btn 
               icon="mdi-heart"
               color="red"
               variant="text"
-              @click="removeFavorite(game.id)"
+              @click.stop="removeFavorite(game.id)"
             ></v-btn>
           </v-card-actions>
         </v-card>
@@ -147,3 +157,40 @@ function getMetacriticColor(score) {
   return 'error';
 }
 </script>
+
+<style scoped>
+/* Effet hover sur les cartes */
+.game-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px !important;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.game-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(236, 72, 153, 0.3) !important;
+}
+
+/* Image avec effet */
+.game-image {
+  position: relative;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+/* Gradient sur l'image */
+.image-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+}
+
+/* Skeleton cards */
+.skeleton-card {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+</style>

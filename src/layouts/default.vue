@@ -1,10 +1,15 @@
 <template>
   <v-app>
     <!-- Header -->
-    <v-app-bar color="primary" prominent>
-      <v-app-bar-title>
-        <v-icon icon="mdi-gamepad-variant" class="mr-2"></v-icon>
-        Game Library
+    <v-app-bar 
+      color="primary" 
+      prominent
+      elevation="8"
+      class="app-header"
+    >
+    <v-app-bar-title class="text-h5 font-weight-bold">
+        <v-icon icon="mdi-gamepad-variant" class="mr-2" size="large"></v-icon>
+        <span class="app-title">Game Library</span>
       </v-app-bar-title>
 
       <v-spacer></v-spacer>
@@ -33,3 +38,28 @@
 <script setup>
 // Layout par défaut avec navigation
 </script>
+
+<style scoped>
+/* Header avec gradient */
+.app-header {
+  background: linear-gradient(135deg, #6366F1 0%, #EC4899 100%) !important;
+}
+
+/* Titre avec effet */
+.app-title {
+  background: linear-gradient(to right, #FFFFFF, #F0ABFC);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.5px;
+}
+
+/* Effet hover sur les boutons de navigation */
+.v-btn {
+  transition: transform 0.2s ease;
+}
+
+.v-btn:hover {
+  transform: translateY(-2px);
+}
+</style>
