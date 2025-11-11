@@ -1,16 +1,32 @@
 <template>
-  <v-container>
+  <v-container class="pb-12">
     <h1 class="text-h3 mb-6">Mes Favoris</h1>
 
     <!-- Message si aucun favori -->
-    <v-alert
+    <v-card
       v-if="!loading && favoriteGames.length === 0"
-      type="info"
-      class="my-4"
+      class="text-center py-12 empty-state"
+      elevation="0"
     >
-      Vous n'avez pas encore de jeux favoris. 
-      Ajoutez des jeux depuis la page d'accueil !
-    </v-alert>
+      <v-icon
+        icon="mdi-heart-outline"
+        size="120"
+        color="grey"
+        class="mb-4"
+      ></v-icon>
+      <h2 class="text-h4 mb-4 text-grey">Pas encore de jeux favoris</h2>
+      <p class="text-body-1 text-grey mb-6">
+        Explorez notre bibliothèque et ajoutez vos jeux préférés !
+      </p>
+      <v-btn
+        to="/"
+        color="primary"
+        size="large"
+        prepend-icon="mdi-gamepad-variant"
+      >
+        Découvrir des jeux
+      </v-btn>
+    </v-card>
 
     <!-- Stade de chargement avec skeleton -->
     <v-row v-if="loading">
@@ -211,5 +227,13 @@ function getMetacriticColor(score) {
 .fade-in {
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
+}
+
+/* Empty state */
+.empty-state {
+  max-width: 600px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%) !important;
+  border-radius: 16px !important;
 }
 </style>

@@ -22,9 +22,6 @@
               @blur="applyYearFilter"
             ></v-text-field>
           </v-col>
-          <v-col cols="2" class="d-flex align-center justify-center">
-            <v-icon icon="mdi-arrow-right" color="grey"></v-icon>
-          </v-col>
           <v-col cols="5">
             <v-text-field
               v-model.number="yearRange[1]"
@@ -202,7 +199,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { getGames, searchGames, getGenres } from '@/services/api.js';
 import { useFavoritesStore } from '@/stores/favorites.js';
 
@@ -218,6 +215,25 @@ const currentPage = ref(1);
 const totalPages = ref(1);
 const yearRange = ref([2010, 2025]);
 const currentYear = new Date().getFullYear();
+const showScrollTop = ref(true);
+
+// Detecter le scroll
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+// Nettoyer l'event listener
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+function handleScroll() {
+  showScrollTop.value = window.scrollY > 100;
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 // Store des favoris
 const favoritesStore = useFavoritesStore();
 

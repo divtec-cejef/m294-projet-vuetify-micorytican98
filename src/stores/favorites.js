@@ -1,61 +1,84 @@
 // Store pour gérer les jeux favoris
 import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-export const useFavoritesStore = defineStore('favorites', {
-  state: () => ({
-    favorites: [], // Liste des IDs des jeux favoris
-  }),
+export const useFavoritesStore = defineStore('favorites', () => {
+  // State
+  const favorites = ref([]);
+  const snackbar = ref({
+    show: false,
+    message: '',
+    color: 'success'
+  });
 
-  getters: {
-    // Vérifier si un jeu est dans les favoris
-    isFavorite: (state) => (gameId) => {
-      return state.favorites.includes(gameId);
-    },
+  // Getters
+  const isFavorite = (gameId) => {
+    return favorites.value.includes(gameId);
+  };
 
-    // Obtenir le nombre de favoris
-    favoritesCount: (state) => {
-      return state.favorites.length;
-    },
-  },
+  const favoritesCount = () => {
+    return favorites.value.length;
+  };
 
-  actions: {
-    // Ajouter un jeu aux favoris
-    addFavorite(gameId) {
-      if (!this.favorites.includes(gameId)) {
-        this.favorites.push(gameId);
-        this.saveFavorites();
-      }
-    },
+  // Actions
+  const addFavorite = (gameId) => {
+    if (!favorites.value.includes(gameId)) {
+      favorites.value.push(gameId);
+      saveFavorites();
+      showSnackbar('Ajouté aux favoris', 'success');
+    }
+  };
 
-    // Retirer un jeu des favoris
-    removeFavorite(gameId) {
-      const index = this.favorites.indexOf(gameId);
-      if (index > -1) {
-        this.favorites.splice(index, 1);
-        this.saveFavorites();
-      }
-    },
+  const removeFavorite = (gameId) => {
+    const index = favorites.value.indexOf(gameId);
+    if (index > -1) {
+      favorites.value.splice(index, 1);
+      saveFavorites();
+      showSnackbar('Retiré des favoris', 'error');
+    }
+  };
 
-    // Basculer le statut favori
-    toggleFavorite(gameId) {
-      if (this.isFavorite(gameId)) {
-        this.removeFavorite(gameId);
-      } else {
-        this.addFavorite(gameId);
-      }
-    },
+  const toggleFavorite = (gameId) => {
+    if (isFavorite(gameId)) {
+      removeFavorite(gameId);
+    } else {
+      addFavorite(gameId);
+    }
+  };
 
-    // Sauvegarder dans localStorage
-    saveFavorites() {
-      localStorage.setItem('favorites', JSON.stringify(this.favorites));
-    },
+  const saveFavorites = () => {
+    localStorage.setItem('favorites', JSON.stringify(favorites.value));
+  };
 
-    // Charger depuis localStorage
-    loadFavorites() {
-      const saved = localStorage.getItem('favorites');
-      if (saved) {
-        this.favorites = JSON.parse(saved);
-      }
-    },
-  },
+  const loadFavorites = () => {
+    const saved = localStorage.getItem('favorites');
+    if (saved) {
+      favorites.value = JSON.parse(saved);
+    }
+  };
+
+  const showSnackbar = (message, color = 'success') => {
+    snackbar.value = {
+      show: true,
+      message,
+      color
+    };
+  };
+
+  const hideSnackbar = () => {
+    snackbar.value.show = false;
+  };
+
+  return {
+    favorites,
+    snackbar,
+    isFavorite,
+    favoritesCount,
+    addFavorite,
+    removeFavorite,
+    toggleFavorite,
+    saveFavorites,
+    loadFavorites,
+    hideSnackbar
+  };
 });
