@@ -175,11 +175,11 @@ J'ai appris Vue 3 (Composition API), Vuetify 3, Pinia, les appels API asynchrone
 ### Réussites et fiertés
 - Application moderne avec thème sombre et gradients
 - Toutes les fonctionnalités demandées implémentées et fonctionnelles
-- Attention aux détails (animations, skeleton loader, couleurs Metacritic)
+- Attention aux détails (animations, skeleton loader, couleurs Metacritic...)
 - Code organisé avec commits réguliers
 
 ### Améliorations possibles
-- Filtre par plateforme (PC, PlayStation, Xbox)
+- Filtre par plateforme (PC, PlayStation, Xbox...)
 - Mode clair en plus du mode sombre
 - Système de listes multiples (À jouer, En cours, Terminés)
 - Notes personnelles sur chaque jeu
