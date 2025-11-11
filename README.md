@@ -143,7 +143,7 @@ src/
 ### Utilisation détaillée
 - **Aide au code général** : 65%
 - **Génération de snippets Vue/Vuetify** : 65%
-- **Aide à la structuration du projet** : 20%
+- **Aide à la structuration du projet** : 10%
 - **Debugging** : 5%
 - **Recherche d'idées** : 0%
 
