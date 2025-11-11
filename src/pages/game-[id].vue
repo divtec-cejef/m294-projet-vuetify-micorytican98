@@ -63,7 +63,6 @@
           <!-- Description -->
           <v-card class="mb-4 content-card" elevation="8">
             <v-card-title class="text-h5 pb-4">
-              <v-icon icon="mdi-text-box" class="mr-2" color="primary"></v-icon>
               Description
             </v-card-title>
             <v-card-text>
@@ -74,7 +73,6 @@
           <!-- Captures d'écran -->
           <v-card v-if="screenshots.length > 0" class="mb-4 content-card" elevation="8">
             <v-card-title class="text-h5 pb-4">
-              <v-icon icon="mdi-image-multiple" class="mr-2" color="secondary"></v-icon>
               Captures d'écran
             </v-card-title>
             <v-card-text>
@@ -100,7 +98,6 @@
           <!-- Vidéos -->
           <v-card v-if="videos.length > 0" class="mb-4 content-card" elevation="8">
             <v-card-title class="text-h5 pb-4">
-              <v-icon icon="mdi-play-circle" class="mr-2" color="accent"></v-icon>
               Vidéos
             </v-card-title>
             <v-card-text>
@@ -127,7 +124,6 @@
           <!-- Informations -->
           <v-card class="info-card" elevation="8">
             <v-card-title class="text-h5 pb-4">
-              <v-icon icon="mdi-information" class="mr-2"></v-icon>
               Informations
             </v-card-title>
             <v-card-text>

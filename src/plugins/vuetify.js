@@ -29,6 +29,12 @@ export default createVuetify({
           background: '#0F172A', // Bleu très foncé
           surface: '#1E293B', // Gris-bleu foncé
         },
+      defaults: {
+        VBtn: {
+          ripple: true,
+          elevation: 2,
+        },
+      },
       },
       light: {
         dark: false,

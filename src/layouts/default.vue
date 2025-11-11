@@ -7,7 +7,7 @@
       elevation="8"
       class="app-header"
     >
-    <v-app-bar-title class="text-h5 font-weight-bold">
+      <v-app-bar-title class="text-h5 font-weight-bold logo-clickable" @click="$router.push('/')">
         <v-icon icon="mdi-gamepad-variant" class="mr-2" size="large"></v-icon>
         <span class="app-title">Game Library</span>
       </v-app-bar-title>
@@ -52,6 +52,16 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 0.5px;
+}
+
+/* Logo cliquable */
+.logo-clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.logo-clickable:hover {
+  transform: scale(1.05);
 }
 
 /* Effet hover sur les boutons de navigation */
